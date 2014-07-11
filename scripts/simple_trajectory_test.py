@@ -47,7 +47,10 @@ if __name__ == '__main__':
 
   goal = FollowJointTrajectoryGoal()
   goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
-  goal.trajectory.points.append(JointTrajectoryPoint([1.57, -1.5418065817051163, 0.0, 1.57, 1.57, 0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [], [], rospy.Duration(10.0)))
+  #goal.trajectory.points.append(JointTrajectoryPoint([-0.10087151336609543, -1.5417429815634993, 0.019743230015841898, 1.1331041783656084, 3.658011557435151, -2.7351279214366393], [], [], [], rospy.Duration(4.0)))
+  #goal.trajectory.points.append(JointTrajectoryPoint([-0.10087151336609543, -1.5417429815634993, 0.019743230015841898, 0, -1.57, 0], [], [], [], rospy.Duration(6.0)))
+  # 1.5 * pi
+  goal.trajectory.points.append(JointTrajectoryPoint([0, -1.57, 0, 0, 4.6, 0], [], [], [], rospy.Duration(6.0)))
   goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 
   client.send_goal(goal)
@@ -56,26 +59,26 @@ if __name__ == '__main__':
   command_result = client.get_result()
   
   #--------------------------------------------------
-  # Kartezjański
+  # Kartezjanski
   #---------------------------------------------------
-  conManSwitch(['PoseInt'], ['SplineTrajectoryGeneratorJoint'], True)
+  #conManSwitch(['PoseInt'], ['SplineTrajectoryGeneratorJoint'], True)
   
-  pose_client = actionlib.SimpleActionClient('/irp6p_arm/pose_trajectory', CartesianTrajectoryAction)
-  pose_client.wait_for_server()
+  #pose_client = actionlib.SimpleActionClient('/irp6p_arm/pose_trajectory', CartesianTrajectoryAction)
+  #pose_client.wait_for_server()
   
-  print 'Server\'s ready'
+  #print 'Server\'s ready'
   
-  goal = CartesianTrajectoryGoal()
+  #goal = CartesianTrajectoryGoal()
   
-  quaternion = getDownOrientedQuaternion()
-  point = Point(0.65, 0, 1.15)
-  goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(5.0), Pose(point, quaternion), Twist()))
-  goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
+  #quaternion = getDownOrientedQuaternion()
+  #point = Point(0.65, 0, 1.15)
+  #goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(10.0), Pose(point, quaternion), Twist()))
+  #goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
   
-  pose_client.send_goal(goal)
+  #pose_client.send_goal(goal)
 
-  pose_client.wait_for_result()
-  command_result = pose_client.get_result()
+  #pose_client.wait_for_result()
+  #command_result = pose_client.get_result()
   
   print 'I\'m done for!'
   
