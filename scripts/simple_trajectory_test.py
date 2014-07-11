@@ -19,34 +19,57 @@ import tf_conversions.posemath as pm
 
 def getDownOrientedQuaternion():
   pi = 3.14
-  v_x = 1
+  v_x = 0
   v_y = 0
   v_z = 0
-  angle = 0.5 * (0.5 * pi)
-  _sin = sin(angle)
-  x = sin(angle) * v_x
-  y = sin(angle) * v_y
-  z = sin(angle) * v_z
-  w = cos(angle)
+  angle = 0.5 * 0 #(0.5 * pi)
+  _sin = math.sin(angle)
+  x = _sin * v_x
+  y = _sin * v_y
+  z = _sin * v_z
+  w = math.cos(angle)
   return Quaternion(x, y, z, w)
   
 if __name__ == '__main__':
-	rospy.init_node('simple_trajectory_test')
+  rospy.init_node('simple_trajectory_test')
   rospy.wait_for_service('/controller_manager/switch_controller')
   conManSwitch = rospy.ServiceProxy('/controller_manager/switch_controller', SwitchController)
   
+  #------------------------------------------------
+  # Stawy
+  #------------------------------------------------
+  conManSwitch(['SplineTrajectoryGeneratorJoint'], [], True)
+    
+  client = actionlib.SimpleActionClient('/irp6p_arm/spline_trajectory_action_joint', FollowJointTrajectoryAction)
+  client.wait_for_server()
+
+  print 'Server\'s A OK!'
+
+  goal = FollowJointTrajectoryGoal()
+  goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
+  goal.trajectory.points.append(JointTrajectoryPoint([1.57, -1.5418065817051163, 0.0, 1.57, 1.57, 0], [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [], [], rospy.Duration(10.0)))
+  goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
+
+  client.send_goal(goal)
+
+  client.wait_for_result()
+  command_result = client.get_result()
+  
+  #--------------------------------------------------
+  # Kartezjański
+  #---------------------------------------------------
   conManSwitch(['PoseInt'], ['SplineTrajectoryGeneratorJoint'], True)
   
   pose_client = actionlib.SimpleActionClient('/irp6p_arm/pose_trajectory', CartesianTrajectoryAction)
   pose_client.wait_for_server()
   
-  print 'Server\' ready'
+  print 'Server\'s ready'
   
   goal = CartesianTrajectoryGoal()
   
   quaternion = getDownOrientedQuaternion()
-  point = Point(0.705438961242, -0.1208864692291, 1.181029263241)
-  trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(3.0), Pose(point, quarternion), Twist()))
+  point = Point(0.65, 0, 1.15)
+  goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(5.0), Pose(point, quaternion), Twist()))
   goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
   
   pose_client.send_goal(goal)

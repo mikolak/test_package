@@ -60,7 +60,7 @@ if __name__ == '__main__':
   motor_client = actionlib.SimpleActionClient('/irp6p_arm/spline_trajectory_action_motor', FollowJointTrajectoryAction)
   motor_client.wait_for_server()
 
-  print 'server ok'
+  print 'Pierwszy ruch'
 
   goal = FollowJointTrajectoryGoal()
   goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
@@ -83,7 +83,7 @@ if __name__ == '__main__':
   joint_client = actionlib.SimpleActionClient('/irp6p_arm/spline_trajectory_action_joint', FollowJointTrajectoryAction)
   joint_client.wait_for_server()
 
-  print 'server ok'
+  print 'Drugi ruch'
 
   goal = FollowJointTrajectoryGoal()
   goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
@@ -107,7 +107,7 @@ if __name__ == '__main__':
   pose_client = actionlib.SimpleActionClient('/irp6p_arm/pose_trajectory', CartesianTrajectoryAction)
   pose_client.wait_for_server()
   
-  print 'server ok'
+  print 'Trzeci ruch'
      
   goal = CartesianTrajectoryGoal()
   
@@ -133,7 +133,7 @@ if __name__ == '__main__':
   tool_client = actionlib.SimpleActionClient('/irp6p_arm/tool_trajectory', CartesianTrajectoryAction)
   tool_client.wait_for_server()
   
-  print 'server ok'
+  print 'Czwarty ruch'
      
   goal = CartesianTrajectoryGoal()
   
@@ -156,7 +156,7 @@ if __name__ == '__main__':
   pose_client = actionlib.SimpleActionClient('/irp6p_arm/pose_trajectory', CartesianTrajectoryAction)
   pose_client.wait_for_server()
   
-  print 'server ok'
+  print 'Piaty ruch'
      
   goal = CartesianTrajectoryGoal()
   
@@ -180,14 +180,14 @@ if __name__ == '__main__':
   # Tool motion
   #
   
+
+  goal = CartesianTrajectoryGoal()
+  
   tool_client = actionlib.SimpleActionClient('/irp6p_arm/tool_trajectory', CartesianTrajectoryAction)
   tool_client.wait_for_server()
   
-  print 'server ok'
+  print 'Szosty ruch'
      
-  goal = CartesianTrajectoryGoal()
-  
-  
   goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(0.0), Pose(Point(0.0, 0.0, 0.25), Quaternion(0.0, 0.0, 0.0, 1.0)), Twist()))
   goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.1)
   
