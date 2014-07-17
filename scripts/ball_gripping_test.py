@@ -20,8 +20,8 @@ import tf_conversions.posemath as pm
 
 def getDownOrientedQuaternion():
 	real_angle = math.pi * 1	#180 stopni to pionowo w dol
-	v_x = 0.7
-	v_y = 0.7
+	v_x = 0.0
+	v_y = -1
 	v_z = 0
 	angle = 0.5 * real_angle
 	_sin = math.sin(angle)

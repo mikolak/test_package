@@ -20,8 +20,8 @@ import tf_conversions.posemath as pm
 
 def getDownOrientedQuaternion():
   real_angle = math.pi * 1	#180 stopni to pionowo w dol
-  v_x = 0.7
-  v_y = 0.7
+  v_x = 0.0
+  v_y = -1.0
   v_z = 0
   angle = 0.5 * real_angle
   _sin = math.sin(angle)
@@ -51,7 +51,7 @@ if __name__ == '__main__':
   #goal.trajectory.points.append(JointTrajectoryPoint([-0.10087151336609543, -1.5417429815634993, 0.019743230015841898, 1.1331041783656084, 3.658011557435151, -2.7351279214366393], [], [], [], rospy.Duration(4.0)))
   #goal.trajectory.points.append(JointTrajectoryPoint([-0.10087151336609543, -1.5417429815634993, 0.019743230015841898, 0, -1.57, 0], [], [], [], rospy.Duration(6.0)))
   # 1.5 * pi
-  goal.trajectory.points.append(JointTrajectoryPoint([0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], [], [], [], rospy.Duration(6.0)))
+  goal.trajectory.points.append(JointTrajectoryPoint([0, -0.5 * math.pi, 0, 0, 1.4 * math.pi, -0.5 * math.pi], [], [], [], rospy.Duration(6.0)))
   goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 
   client.send_goal(goal)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
   client.wait_for_result()
   command_result = client.get_result()
   
-  rospy.sleep(5.0)
+  rospy.sleep(1.0)
   
   #--------------------------------------------------
   # Kartezjanski
