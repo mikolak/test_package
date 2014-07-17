@@ -59,7 +59,7 @@ if __name__ == '__main__':
   client.wait_for_result()
   command_result = client.get_result()
   
-  #rospy.sleep(1.0)
+  rospy.sleep(5.0)
   
   #--------------------------------------------------
   # Kartezjanski
@@ -201,6 +201,4 @@ if __name__ == '__main__':
 
   client.wait_for_result()
   command_result = client.get_result()
-  
-  conManSwitch([], ['Irp6pmSplineTrajectoryGeneratorJoint'], True)
   print 'Skonczylem!'
