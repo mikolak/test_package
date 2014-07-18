@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
 	goal = FollowJointTrajectoryGoal()
 	goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
-	goal.trajectory.points.append(JointTrajectoryPoint([0, -0.5 * math.pi, 0, 0, 1.4 * math.pi, -0.5 * math.pi], [], [], [], rospy.Duration(6.0)))
+	goal.trajectory.points.append(JointTrajectoryPoint([0, -0.5 * math.pi, 0, 0, 1.45 * math.pi, -0.5 * math.pi], [], [], [], rospy.Duration(6.0)))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 
 	client.send_goal(goal)
@@ -85,8 +85,8 @@ if __name__ == '__main__':
 	goal = CartesianTrajectoryGoal()
 	
 	quaternion = getDownOrientedQuaternion()
-	point = Point(0.9, 0, 1.0)
-	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(20.0), Pose(point, quaternion), Twist()))
+	point = Point(0.9, 0, 0.95)
+	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(10.0), Pose(point, quaternion), Twist()))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 	
 	pose_client.send_goal(goal)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
 	goal = FollowJointTrajectoryGoal()
 	goal.trajectory.joint_names = ['joint1']
-	goal.trajectory.points.append(JointTrajectoryPoint([500.0], [0.0], [], [], rospy.Duration(3.0)))
+	goal.trajectory.points.append(JointTrajectoryPoint([1000.0], [0.0], [], [], rospy.Duration(3.0)))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 
 	motor_client.send_goal(goal)
@@ -142,8 +142,8 @@ if __name__ == '__main__':
 	goal = CartesianTrajectoryGoal()
 	
 	quaternion = getDownOrientedQuaternion()
-	point = Point(1.0, 0.2, 1.0)
-	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(15.0), Pose(point, quaternion), Twist()))
+	point = Point(0.9, 0.3, 0.95)
+	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(10.0), Pose(point, quaternion), Twist()))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 	
 	pose_client.send_goal(goal)
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
 	goal = FollowJointTrajectoryGoal()
 	goal.trajectory.joint_names = ['joint1']
-	goal.trajectory.points.append(JointTrajectoryPoint([0.0], [0.0], [], [], rospy.Duration(3.0)))
+	goal.trajectory.points.append(JointTrajectoryPoint([-1000.0], [0.0], [], [], rospy.Duration(3.0)))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 
 	motor_client.send_goal(goal)
@@ -178,8 +178,10 @@ if __name__ == '__main__':
 	goal = CartesianTrajectoryGoal()
 	
 	quaternion = getDownOrientedQuaternion()
-	point = Point(0.85, 0, 1.20)
-	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(15.0), Pose(point, quaternion), Twist()))
+	point1 = Point(0.9, 0.3, 1.20)
+	point2 = Point(0.85, 0, 1.20)
+	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(8.0), Pose(point1, quaternion), Twist()))
+	goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(16.0), Pose(point2, quaternion), Twist()))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 	
 	pose_client.send_goal(goal)
@@ -196,7 +198,7 @@ if __name__ == '__main__':
 
 	goal = FollowJointTrajectoryGoal()
 	goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
-	goal.trajectory.points.append(JointTrajectoryPoint([-0.10087151336609543, -1.5417429815634993, 0.019743230015841898, 1.1331041783656084, 3.658011557435151, -2.7351279214366393], [], [], [], rospy.Duration(20.0)))
+	goal.trajectory.points.append(JointTrajectoryPoint([-0.10087151336609543, -1.5417429815634993, 0.019743230015841898, 1.1331041783656084, 3.658011557435151, -2.7351279214366393], [], [], [], rospy.Duration(10.0)))
 	goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 
 	client.send_goal(goal)
