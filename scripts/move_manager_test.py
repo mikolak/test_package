@@ -24,7 +24,9 @@ if __name__ == '__main__':
 	rospy.init_node('simple_trajectory_test')
 	moveMan = ROSPyIrpMoveManager('ot')
 	
+	# WAZNE - ot ma siedem wspolrzednych w stawach, p szesc
 	moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
 	#moveMan.xyzMove(Point(0.85, 0, 1.20), 5)
-	moveMan.xyzMove(Point(0.80, 0, 0.95), 5, True)
+	rospy.sleep(0.100)
+	moveMan.xyzMove(Point(0.80, 0, 0.95), 20, True)
 	moveMan.finish()

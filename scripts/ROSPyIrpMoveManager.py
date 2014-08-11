@@ -101,7 +101,7 @@ class ROSPyIrpMoveManager:
 		goal = FollowJointTrajectoryGoal()
 		if self.__robot == 'ot':
 			goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6', 'joint7']
-		else:
+		elif self.__robot == 'p':
 			goal.trajectory.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
 			
 		goal.trajectory.points.append(JointTrajectoryPoint(point, [], [], [], rospy.Duration(duration)))
@@ -126,7 +126,7 @@ class ROSPyIrpMoveManager:
 			self.switchForceTransformation()
 			goal.wrench_constraint.force.x = 0
 			goal.wrench_constraint.force.y = 0
-			goal.wrench_constraint.force.z = 20
+			goal.wrench_constraint.force.z = 5
 			
 		goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(duration), Pose(point, self.__quaternion), Twist()))
 		goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
