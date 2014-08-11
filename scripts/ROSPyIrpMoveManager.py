@@ -39,6 +39,7 @@ class ROSPyIrpMoveManager:
 		rospy.wait_for_service('/controller_manager/switch_controller')
 		self.__conManSwitch = rospy.ServiceProxy('/controller_manager/switch_controller', SwitchController)
 		self.setClients()
+		self.__forceTransformation = False
 		
 	def getDownOrientedQuaternion(self):
 		real_angle = math.pi * 1	#180 stopni to pionowo w dol
@@ -121,9 +122,11 @@ class ROSPyIrpMoveManager:
 		goal = CartesianTrajectoryGoal()
 		
 		if stopOnForceDetected == True:
-			goal.wrench_constraint.force.x = 5
-			goal.wrench_constraint.force.y = 5
-			goal.wrench_constraint.force.z = 5
+			print '...with a stop on detected force...'
+			self.switchForceTransformation()
+			goal.wrench_constraint.force.x = 0
+			goal.wrench_constraint.force.y = 0
+			goal.wrench_constraint.force.z = 20
 			
 		goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(duration), Pose(point, self.__quaternion), Twist()))
 		goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
@@ -132,6 +135,9 @@ class ROSPyIrpMoveManager:
 
 		self.__poseClient.wait_for_result()
 		command_result = self.__poseClient.get_result()
+		
+		if stopOnForceDetected == True:
+			self.switchForceTransformation()
 		
 	def toolMove(self, point, duration):
 		self.setGenerator('tool move')
@@ -166,6 +172,22 @@ class ROSPyIrpMoveManager:
 		self.__toolConfigClient.wait_for_result()
 		command_result = self.__toolConfigClient.get_result()
 		
+	def switchForceTransformation(self):
+		if self.__robot == 'ot':
+			switched = 'Irp6otmForceTransformation'
+		elif self.__robot == 'p':
+			switched = 'Irp6pmForceTransformation'
+		else:
+			print 'ERROR! Not a proper robot name!'
+			sys.exit()
+			
+		if self.__forceTransformation == False:
+			self.__forceTransformation = True
+			self.__conManSwitch([switched], [], True)
+		else:
+			self.__forceTransformation = False
+			self.__conManSwitch([], [switched], True)
+			
 	def finish(self):
 		print 'Clearing...'
 		self.__conManSwitch([], [self.__lastGenerator], True)
