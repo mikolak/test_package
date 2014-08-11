@@ -26,5 +26,5 @@ if __name__ == '__main__':
 	
 	moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
 	#moveMan.xyzMove(Point(0.85, 0, 1.20), 5)
-	moveMan.xyzMove(Point(0.83, 0, 1.05), 5)
+	moveMan.xyzMove(Point(0.80, 0, 1.05), 5, True)
 	moveMan.finish()

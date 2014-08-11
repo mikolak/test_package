@@ -112,7 +112,7 @@ class ROSPyIrpMoveManager:
 		
 		commandResult = self.__jointClient.get_result()
 	
-	def xyzMove(self, point, duration):
+	def xyzMove(self, point, duration, stopOnForceDetected):
 		self.setGenerator('xyz')
 		self.__poseClient.wait_for_server()
 	
@@ -120,6 +120,11 @@ class ROSPyIrpMoveManager:
 		
 		goal = CartesianTrajectoryGoal()
 		
+		if stopOnForceDetected == True:
+			goal.wrench_constraint.force.x = 5
+			goal.wrench_constraint.force.y = 5
+			goal.wrench_constraint.force.z = 5
+			
 		goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(duration), Pose(point, self.__quaternion), Twist()))
 		goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
 		
