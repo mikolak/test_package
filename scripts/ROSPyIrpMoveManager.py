@@ -59,7 +59,7 @@ class ROSPyIrpMoveManager:
 			self.__jointClient = actionlib.SimpleActionClient('/irp6ot_arm/spline_trajectory_action_joint', FollowJointTrajectoryAction)
 			self.__poseClient = actionlib.SimpleActionClient('/irp6ot_arm/pose_trajectory', CartesianTrajectoryAction)
 			self.__toolMoveClient = actionlib.SimpleActionClient('/irp6ot_tfg/spline_trajectory_action_motor', FollowJointTrajectoryAction)
-			__toolConfigClient = actionlib.SimpleActionClient('/irp6ot_arm/tool_trajectory', CartesianTrajectoryAction)
+			self.__toolConfigClient = actionlib.SimpleActionClient('/irp6ot_arm/tool_trajectory', CartesianTrajectoryAction)
 		elif self.__robot == 'p':
 			self.__jointClient = actionlib.SimpleActionClient('/irp6p_arm/spline_trajectory_action_joint', FollowJointTrajectoryAction)
 			self.__poseClient = actionlib.SimpleActionClient('/irp6p_arm/pose_trajectory', CartesianTrajectoryAction)
@@ -68,7 +68,8 @@ class ROSPyIrpMoveManager:
 			
 	def setGenerator(self, generator):
 		if generator == '':
-			self.conManSwitch([], [__lastGenerator], True)
+			self.__conManSwitch([], [self.__lastGenerator], True)
+			return
 			
 		if self.__robot == 'ot':
 			if generator == 'xyz':
@@ -113,7 +114,7 @@ class ROSPyIrpMoveManager:
 		
 		commandResult = self.__jointClient.get_result()
 	
-	def xyzMove(self, point, duration, stopOnForceDetected):
+	def xyzMove(self, point, duration, stopOnForceDetected, zForce):
 		self.setGenerator('xyz')
 		self.__poseClient.wait_for_server()
 	
@@ -126,7 +127,7 @@ class ROSPyIrpMoveManager:
 			self.switchForceTransformation()
 			goal.wrench_constraint.force.x = 0
 			goal.wrench_constraint.force.y = 0
-			goal.wrench_constraint.force.z = 5
+			goal.wrench_constraint.force.z = zForce
 			
 		goal.trajectory.points.append(CartesianTrajectoryPoint(rospy.Duration(duration), Pose(point, self.__quaternion), Twist()))
 		goal.trajectory.header.stamp = rospy.get_rostime() + rospy.Duration(0.2)
@@ -153,9 +154,9 @@ class ROSPyIrpMoveManager:
 		self.__toolMoveClient.send_goal(goal)
 
 		self.__toolMoveClient.wait_for_result()
-		command_result = self.__ToolMoveClient.get_result()
+		command_result = self.__toolMoveClient.get_result()
 		
-	def toolConfig(self, point, duration):
+	def toolConfig(self, point):
 		self.setGenerator('')
 	
 		self.__toolConfigClient.wait_for_server()
@@ -173,6 +174,7 @@ class ROSPyIrpMoveManager:
 		command_result = self.__toolConfigClient.get_result()
 		
 	def switchForceTransformation(self):
+		print 'Switching ForceTransformation for ' + self.__robot
 		if self.__robot == 'ot':
 			switched = 'Irp6otmForceTransformation'
 		elif self.__robot == 'p':
@@ -182,9 +184,11 @@ class ROSPyIrpMoveManager:
 			sys.exit()
 			
 		if self.__forceTransformation == False:
+			print 'on'
 			self.__forceTransformation = True
 			self.__conManSwitch([switched], [], True)
 		else:
+			print 'off'
 			self.__forceTransformation = False
 			self.__conManSwitch([], [switched], True)
 			
