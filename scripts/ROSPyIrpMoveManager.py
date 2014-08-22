@@ -124,7 +124,7 @@ class ROSPyIrpMoveManager:
 		
 		if stopOnForceDetected == True:
 			print '...with a stop on detected force...'
-			self.switchForceTransformation()
+			self.switchForceTransformation(True)
 			goal.wrench_constraint.force.x = 0
 			goal.wrench_constraint.force.y = 0
 			goal.wrench_constraint.force.z = zForce
@@ -138,7 +138,7 @@ class ROSPyIrpMoveManager:
 		command_result = self.__poseClient.get_result()
 		
 		if stopOnForceDetected == True:
-			self.switchForceTransformation()
+			self.switchForceTransformation(False)
 		
 	def toolMove(self, point, duration):
 		self.setGenerator('tool move')
@@ -173,7 +173,7 @@ class ROSPyIrpMoveManager:
 		self.__toolConfigClient.wait_for_result()
 		command_result = self.__toolConfigClient.get_result()
 		
-	def switchForceTransformation(self):
+	def switchForceTransformation(self, flip):
 		print 'Switching ForceTransformation for ' + self.__robot
 		if self.__robot == 'ot':
 			switched = 'Irp6otmForceTransformation'
@@ -183,7 +183,12 @@ class ROSPyIrpMoveManager:
 			print 'ERROR! Not a proper robot name!'
 			sys.exit()
 			
-		if self.__forceTransformation == False:
+		rospy.sleep(1.)
+		
+		if self.__forceTransformation == flip:
+			print 'to the same state'
+			return	
+		elif self.__forceTransformation == False:
 			print 'on'
 			self.__forceTransformation = True
 			self.__conManSwitch([switched], [], True)
@@ -191,7 +196,7 @@ class ROSPyIrpMoveManager:
 			print 'off'
 			self.__forceTransformation = False
 			self.__conManSwitch([], [switched], True)
-			
+
 	def finish(self):
 		print 'Clearing...'
 		self.__conManSwitch([], [self.__lastGenerator], True)
