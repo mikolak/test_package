@@ -10,7 +10,7 @@ RELEASE_POINT = 800
 BORDER_FORCE = 2.5
 
 def moveToLook():
-	moveMan.xyzMove(Point(0.75, 0.0, 1.05), 5, False, 0)
+	moveMan.xyzMove(Point(0.75, 0.0, 1.03), 5, False, 0)
 	
 def initialize():
 	moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
