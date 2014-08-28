@@ -114,7 +114,7 @@ class ROSPyIrpMoveManager:
 		
 		commandResult = self.__jointClient.get_result()
 	
-	def xyzMove(self, point, duration, stopOnForceDetected, zForce):
+	def xyzMove(self, point, duration, stopOnForceDetected, zForce=0, sleepDur=1.0):
 		self.setGenerator('xyz')
 		self.__poseClient.wait_for_server()
 	
@@ -125,6 +125,7 @@ class ROSPyIrpMoveManager:
 		if stopOnForceDetected == True:
 			print '...with a stop on detected force...'
 			self.switchForceTransformation(True)
+			rospy.sleep(sleepDur)
 			goal.wrench_constraint.force.x = 0
 			goal.wrench_constraint.force.y = 0
 			goal.wrench_constraint.force.z = zForce
@@ -182,8 +183,6 @@ class ROSPyIrpMoveManager:
 		else:
 			print 'ERROR! Not a proper robot name!'
 			sys.exit()
-			
-		rospy.sleep(1.)
 		
 		if self.__forceTransformation == flip:
 			print 'to the same state'
