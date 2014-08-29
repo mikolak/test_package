@@ -5,12 +5,12 @@ import math
 
 from ROSPyIrpMoveManager import *
 
-GRIP_POINT = 100
-RELEASE_POINT = 800
+GRIP_POINT = 50
+RELEASE_POINT = 750
 BORDER_FORCE = 2.5
 
 def moveToLook():
-	moveMan.xyzMove(Point(0.75, 0.0, 1.03), 5, False, 0)
+	moveMan.xyzMove(Point(0.75, 0.0, 1.03), 3, False, 0)
 	
 def initialize():
 	moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
@@ -25,13 +25,15 @@ def moveToPickUp():
 	print 'Move to pick up====================================='
 	moveMan.xyzMove(Point(0.8, 0, 0.93), 20, True, BORDER_FORCE, sleepDur=2)
 
+def pickUp():
+	print 'Picking up================================'
+	grip()
+	moveMan.xyzMove(Point(0.8, 0, 1.00), 1, False)
+	
 def prepareForPickUp():
 	print 'Prepare for pick up================================'
 	moveMan.xyzMove(Point(0.8, 0, 1), 3, False)
 	release()
-	#rospy.sleep(2.)
-	#moveMan.switchForceTransformation(True)
-	#rospy.sleep(2.)
 	
 def prepareToGripTheGripper():
 	print 'Prepare to grip the gripper==========================='
@@ -46,13 +48,14 @@ def grip():
 	print 'Grip======================================'
 	moveMan.toolMove([GRIP_POINT], 3)
 	
-def testGrip():
+def testGrip(inc=0):
 	print 'Test grip===================================='
-	moveMan.xyzMove(Point(0.8, 0, 1.00), 1, False)
-	moveMan.xyzMove(Point(0.8, 0.1, 1.00), 1, False)
-	moveMan.xyzMove(Point(0.8, 0.1, 0.93), 15, True, BORDER_FORCE)
+	margin = (inc - 1) / 100
+	margin = margin * 1.5
+	moveMan.xyzMove(Point(0.8 + margin, 0.1, 1.00), 1, False)
+	moveMan.xyzMove(Point(0.8 + margin, 0.1, 0.93), 15, True, BORDER_FORCE)
 	release()
-	moveMan.xyzMove(Point(0.8, 0.1, 1.0), 1, False)
+	moveMan.xyzMove(Point(0.8 + margin, 0.1, 1.0), 1, False)
 	grip()
 	moveMan.xyzMove(Point(0.8, 0.0, 1.0), 1, False)
 
@@ -74,8 +77,8 @@ if __name__ == '__main__':
 		moveToLook()
 		prepareForPickUp()
 		moveToPickUp()
-		grip()
-		testGrip()
+		pickUp()
+		testGrip(i)
 	
 	#releaseGripper()
 	moveMan.finish()
