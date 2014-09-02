@@ -6,6 +6,10 @@ import threading
 
 from ROSPyIrpMoveManager import *
 
+
+#
+# DODAĆ KOREKTĘ!!! Skrajnie na górze 0.5 cm w lewo, skrajnie na dole 0 cm w lewo po drodze procentowo
+#
 GRIP_POINT = 50
 RELEASE_POINT = 750
 BORDER_FORCE = 2.5
@@ -38,10 +42,18 @@ def countPosition():
 	
 	#print "I've read: x = %f, y = %f" %(x, y)
 	
+	#wyliczenie korekty z powodu krzywej kamery
+	#1 piksel ~ 0.023 cm
+	#skrajnie na gorze 0.5 centymetra w lewo
+	#skrajnie z lewej 0.2 centymetra w dol
+	correctionX = (-1) * (1- y/height) * 25
+	correctionY = (1 - x/width) * 10
 	global realX
 	global realY
-	realX = ((x - width/2.0)/scale)/100.0
-	realY = ((height - y)/scale)/100.0
+	
+	realY = ((height - (y + correctionY))/scale)/100.0
+	realX = ((-(x + correctionX) + width/2.0)/scale)/100.0
+	
 	
 	print 'Przesuniecie: x = %f, y = %f' %(realY, realX)
 	
@@ -131,21 +143,21 @@ if __name__ == '__main__':
 	rospy.Subscriber('/center_y', Float32, yCallback)
 	rospy.sleep(1.)
 	
-	initialize()
+	#initialize()
 	
 	# WAZNE - ot ma siedem wspolrzednych w stawach, p szesc
 	moveMan.toolConfig(Point(0.0, 0.0, 0.375))
-	wetGripper()
+	#wetGripper()
 	#prepareToGripTheGripper()
 	for i in range(0, 5):
 		print "%d. proba" %(i)
 		moveToLook()
 		waitForReading()
 		countPosition()
-		prepareForPickUp()
-		moveToPickUp()
-		pickUp()
-		testGrip(i)
+		#prepareForPickUp()
+		#moveToPickUp()
+		#pickUp()
+		#testGrip(i)
 	
 	#releaseGripper()
 	moveMan.finish()
