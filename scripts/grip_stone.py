@@ -7,10 +7,16 @@ import threading
 from ROSPyIrpMoveManager import *
 
 # WAZNE - ot ma siedem wspolrzednych w stawach, p szesc
-	
+ROBOT = 'p'
+
+#LOOKOUT_POINT = Point(0.76, 0.0, 1.03)
+LOOKOUT_POINT = Point(0.765, 0.0, 1.04)
+
 GRIP_POINT = 50
 RELEASE_POINT = 750
-BORDER_FORCE = 2.5
+#Dla tracka 2.5
+#Dla postumenta 1.5 (chyba)
+BORDER_FORCE = 1.5
 
 realX = 0
 realY = 0
@@ -22,10 +28,13 @@ xLock = threading.Lock()
 yLock = threading.Lock()
 
 def moveToLook():
-	moveMan.xyzMove(Point(0.76, 0.0, 1.03), 3, False)
+	moveMan.xyzMove(LOOKOUT_POINT, 3, False)
 	
 def initialize():
-	moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
+	if ROBOT == 'ot':
+		moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
+	elif ROBOT == 'p':
+		moveMan.jointMove([0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, 0.5 * math.pi], 12)
 
 def waitForReading():
 	rospy.sleep(5.)
@@ -42,9 +51,16 @@ def countPosition():
 	
 	#wyliczenie korekty z powodu krzywej kamery
 	#1 piksel ~ 0.023 cm
+	#DLA TRACKA
 	#skrajnie na gorze 0.5 centymetra w lewo
 	#skrajnie z lewej 0.2 centymetra w dol
-	correctionX = (-1) * (1- y/height) * 25
+	#DLA POSTUMENTA
+	#skrajnie na gorze 0.3 centymetra w lewo
+	#skrajnie z lewej 0.2 centymetra w dol
+	
+	#POWINNO BYĆ 1 CENTYMETR W PRAWO!!!!!!
+	#chyba już jest
+	correctionX = (-1) * (1- y/height) * 5
 	correctionY = (1 - x/width) * 10
 	
 	global realX
@@ -134,7 +150,7 @@ def releaseGripper():
 	
 if __name__ == '__main__':
 	rospy.init_node('grip_stone')
-	moveMan = ROSPyIrpMoveManager('ot')
+	moveMan = ROSPyIrpMoveManager(ROBOT)
 	
 	rospy.Subscriber('/center_x', Float32, xCallback)
 	rospy.Subscriber('/center_y', Float32, yCallback)

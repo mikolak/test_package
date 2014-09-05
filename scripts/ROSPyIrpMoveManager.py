@@ -43,9 +43,16 @@ class ROSPyIrpMoveManager:
 		
 	def getDownOrientedQuaternion(self):
 		real_angle = math.pi * 1	#180 stopni to pionowo w dol
-		v_x = 0.0
-		v_y = -1
-		v_z = 0
+		
+		if self.__robot == 'ot':
+			v_x = 0.0
+			v_y = -1
+			v_z = 0
+		else:
+			v_x = 1.0
+			v_y = 0
+			v_z = 0
+			
 		angle = 0.5 * real_angle
 		_sin = math.sin(angle)
 		x = _sin * v_x
