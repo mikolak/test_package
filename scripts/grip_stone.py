@@ -10,9 +10,9 @@ from ROSPyIrpMoveManager import *
 ROBOT = 'p'
 
 #LOOKOUT_POINT = Point(0.76, 0.0, 1.03)
-LOOKOUT_POINT = Point(0.765, 0.0, 1.04)
+LOOKOUT_POINT = Point(0.765, 0.0, 1.03)
 
-GRIP_POINT = 50
+GRIP_POINT = 150
 RELEASE_POINT = 750
 #Dla tracka 2.5
 #Dla postumenta 1.5 (chyba)
@@ -47,21 +47,23 @@ def countPosition():
 	x =  getX()
 	y = getY()
 	
-	#print "I've read: x = %f, y = %f" %(x, y)
+	print "I've read: x = %f, y = %f" %(x, y)
 	
 	#wyliczenie korekty z powodu krzywej kamery
 	#1 piksel ~ 0.023 cm
 	#DLA TRACKA
-	#skrajnie na gorze 0.5 centymetra w lewo
-	#skrajnie z lewej 0.2 centymetra w dol
+	#skrajnie na gorze 0.5 centymetra w lewo correctionX = (-1) * (1- y/height) * 25
+	#skrajnie z lewej 0.2 centymetra w dol correctionY = (1 - x/width) * 10
 	#DLA POSTUMENTA
 	#skrajnie na gorze 0.3 centymetra w lewo
 	#skrajnie z lewej 0.2 centymetra w dol
 	
-	#POWINNO BYĆ 1 CENTYMETR W PRAWO!!!!!!
+	#POWINNO BYC 1 CENTYMETR W PRAWO!!!!!!
 	
-	correctionX = (-1) * (1- y/height) * 15
-	correctionY = (1 - x/width) * 10
+	correctionX = (x/width) * 85
+	correctionY = (1- y/height) * (-50) + (math.fabs(x - width/2.0)/(width/2.0))*(-50)
+	
+	print 'Korekty: x = %f, y = %f' %(correctionX, correctionY)
 	
 	global realX
 	global realY
@@ -137,7 +139,7 @@ def grip():
 def testGrip(inc=0):
 	print 'Test grip===================================='
 	margin = (inc - 1.) / 100.
-	margin = margin * 1.5
+	margin = margin * 2.0
 	moveMan.xyzMove(Point(0.76 + margin, 0.1, 1.00), 3, False)
 	moveMan.xyzMove(Point(0.76 + margin, 0.1, 0.93), 20, True, BORDER_FORCE)
 	release()
@@ -156,11 +158,11 @@ if __name__ == '__main__':
 	rospy.Subscriber('/center_y', Float32, yCallback)
 	rospy.sleep(1.)
 	
-	initialize()
+	#initialize()
 
 	moveMan.toolConfig(Point(0.0, 0.0, 0.375))
 	wetGripper()
-	
+	#release()
 	for i in range(1, 6):
 		print "%d. proba" %(i)
 		moveToLook()
@@ -171,5 +173,5 @@ if __name__ == '__main__':
 		pickUp()
 		testGrip(i)
 	
-	releaseGripper()
+	#releaseGripper()
 	moveMan.finish()
