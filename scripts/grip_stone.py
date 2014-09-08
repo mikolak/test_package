@@ -59,8 +59,8 @@ def countPosition():
 	#skrajnie z lewej 0.2 centymetra w dol
 	
 	#POWINNO BYĆ 1 CENTYMETR W PRAWO!!!!!!
-	#chyba już jest
-	correctionX = (-1) * (1- y/height) * 5
+	
+	correctionX = (-1) * (1- y/height) * 15
 	correctionY = (1 - x/width) * 10
 	
 	global realX
