@@ -9,8 +9,7 @@ from ROSPyIrpMoveManager import *
 # WAZNE - ot ma siedem wspolrzednych w stawach, p szesc
 ROBOT = 'p'
 
-#LOOKOUT_POINT = Point(0.76, 0.0, 1.03)
-LOOKOUT_POINT = Point(0.765, 0.0, 1.03)
+LOOKOUT_POINT = None
 
 GRIP_POINT = 150
 RELEASE_POINT = 750
@@ -31,10 +30,13 @@ def moveToLook():
 	moveMan.xyzMove(LOOKOUT_POINT, 3, False)
 	
 def initialize():
+	global LOOKOUT_POINT
 	if ROBOT == 'ot':
 		moveMan.jointMove([0, 0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, -0.5 * math.pi], 6)
+		LOOKOUT_POINT = Point(0.76, 0.0, 1.03)
 	elif ROBOT == 'p':
 		moveMan.jointMove([0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, 0.5 * math.pi], 12)
+		LOOKOUT_POINT = Point(0.765, 0.0, 1.03)
 
 def waitForReading():
 	rospy.sleep(5.)
@@ -158,7 +160,7 @@ if __name__ == '__main__':
 	rospy.Subscriber('/center_y', Float32, yCallback)
 	rospy.sleep(1.)
 	
-	#initialize()
+	initialize()
 
 	moveMan.toolConfig(Point(0.0, 0.0, 0.375))
 	wetGripper()

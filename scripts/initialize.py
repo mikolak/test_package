@@ -18,7 +18,7 @@ if __name__ == '__main__':
 		LOOKOUT_POINT = Point(0.76, 0.0, 1.03)
 	elif ROBOT == 'p':
 		moveMan.jointMove([0, -0.5 * math.pi, 0, 0, 1.5 * math.pi, 0.5 * math.pi], 12)
-		LOOKOUT_POINT = Point(0.765, 0.0, 1.04)
+		LOOKOUT_POINT = Point(0.765, 0.0, 1.03)
 			
 	moveMan.toolConfig(Point(0.0, 0.0, 0.375))	
 	moveMan.xyzMove(LOOKOUT_POINT, 5, False)
